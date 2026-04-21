@@ -1,0 +1,40 @@
+{
+  "name": "@krazybean/glassjs",
+  "version": "0.1.0",
+  "description": "Lightweight request observability for Node.js services",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "require": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "src/*.js"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krazybean/glassjs.git"
+  },
+  "keywords": [
+    "observability",
+    "logging",
+    "nodejs",
+    "express",
+    "middleware"
+  ],
+  "author": "Juan Castro <juan.castro.dev@gmail.com>",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/krazybean/glassjs/issues"
+  },
+  "homepage": "https://github.com/krazybean/glassjs#readme"
+}
