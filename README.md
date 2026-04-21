@@ -1,21 +1,20 @@
 # GlassJS
 
+Minimal observability for Node.js backends.
+
+Better than console.log — without the weight of full observability stacks.
+
 ![npm](https://img.shields.io/npm/v/@krazybean/glassjs)
 ![node](https://img.shields.io/badge/node-18%2B-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-Minimal observability for Node.js backends.
+## Why developers adopt it
 
-See what your app is doing without adopting a full observability stack.
-
-`@krazybean/glassjs` gives you useful request visibility in minutes: request IDs, timing, structured logs, and request-scoped logging context.
-
-## Why GlassJS
-
-- Zero config: add one line, get immediate value.
-- Lightweight: no dependencies, no agents, no dashboards.
-- No vendor lock-in: plain JSON logs to stdout or your own logger.
-- Practical defaults: request ID propagation, timing, context-aware app logs.
+- One line to enable request visibility
+- Request IDs + timing out of the box
+- Structured JSON logs for real systems
+- Request-scoped context via AsyncLocalStorage
+- Zero dependencies, zero vendor lock-in
 
 ## Install
 
@@ -23,7 +22,7 @@ See what your app is doing without adopting a full observability stack.
 npm install @krazybean/glassjs
 ```
 
-## 30-second quick start
+## 30-second setup
 
 ```js
 const express = require('express');
@@ -34,23 +33,20 @@ const app = express();
 observe(app, { service: 'api' });
 
 app.get('/health', (req, res) => {
-  log('health check hit');
-  res.status(200).json({ ok: true });
+  log('health check');
+  res.json({ ok: true });
 });
 
 app.listen(3000);
 ```
 
-## What you get out of the box
+## What you get immediately
 
-- `x-request-id` reuse/generation + response header propagation
-- request duration and status logs
-- request-scoped context (via AsyncLocalStorage)
-- `log()`, `log.info()`, `log.error()`, etc.
-- `log.child(bindings)` for module/service/component bindings
-- lifecycle hooks: `onRequestStart`, `onRequestFinish`
+- Automatic `x-request-id` propagation
+- Request completion logs (`statusCode`, `durationMs`, `path`, `method`)
+- Context-aware app logs (`log.info`, `log.error`) inside requests
 
-## Example output
+Example request log:
 
 ```json
 {
@@ -62,13 +58,12 @@ app.listen(3000);
   "path": "/health",
   "statusCode": 200,
   "durationMs": 1.032,
-  "ip": "::1",
   "aborted": false,
   "service": "api"
 }
 ```
 
-## API at a glance
+## API (quick glance)
 
 - `observe(app, options?)`
 - `log(messageOrFields?, fields?)`
@@ -76,9 +71,30 @@ app.listen(3000);
 - `log.child(bindings)`
 - `getRequestContext()`
 
-## Full docs
+## Common real-world patterns
 
-For detailed examples and advanced usage, see [USAGE.md](/Users/juancastro/Documents/Github/glassjs/USAGE.md).
+```js
+// Skip noisy routes
+observe(app, {
+  skip: (req) => req.url === '/healthz',
+});
+
+// Child logger for module-level fields
+const authLog = log.child({ module: 'auth' });
+authLog.info('token validated', { userId: 'u_123' });
+
+// Lifecycle hooks
+observe(app, {
+  hooks: {
+    onRequestStart({ requestId }) {
+      log.debug('request started', { requestId });
+    },
+    onRequestFinish({ entry }) {
+      if (entry.statusCode >= 500) log.error('request failed', { statusCode: entry.statusCode });
+    },
+  },
+});
+```
 
 ## Philosophy
 
@@ -86,3 +102,7 @@ For detailed examples and advanced usage, see [USAGE.md](/Users/juancastro/Docum
 - Zero config
 - No vendor lock-in
 - Useful immediately
+
+## Full usage guide
+
+See [USAGE.md](/Users/juancastro/Documents/Github/glassjs/USAGE.md) for complete examples and option details.

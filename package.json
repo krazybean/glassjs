@@ -36,5 +36,8 @@
   "bugs": {
     "url": "https://github.com/krazybean/glassjs/issues"
   },
-  "homepage": "https://github.com/krazybean/glassjs#readme"
+  "homepage": "https://github.com/krazybean/glassjs#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
 }
