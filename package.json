@@ -1,6 +1,6 @@
 {
   "name": "@krazybean/glassjs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Lightweight request observability for Node.js services",
   "main": "./index.js",
   "types": "./index.d.ts",
